@@ -36,27 +36,56 @@
 - (NSString*) flipCardAtIndex:(NSUInteger)index{
     Card * card = [self cardAtIndex:index];
     NSString * result = [NSString stringWithFormat:SIMPLE_FLIP,card.contents];
-    if(card && !card.isUnplayable){
-        if(!card.isFaceUp){
-            for(Card * otherCard in self.cards){
-                if(otherCard.isFaceUp && !otherCard.isUnplayable){
-                    int matchScore = [card match:@[otherCard]];
-                    if(matchScore){
-                        self.score += matchScore;
-                        card.unplayable = YES;
-                        otherCard.unplayable = YES;
-                        result = [NSString stringWithFormat:CARD_MATCH,card.contents,otherCard.contents];
-                    }else{
-                        otherCard.faceUp = NO;
-                        self.score -= matchScore * MISMATCH_PENALTY;
-                        result = [NSString stringWithFormat:CARD_MISMATCH,card.contents,otherCard.contents];
+    if(self.gameMode == TWO_CARDS_MODE && card){
+        /* Two cards mode */
+        if(!card.isUnplayable){
+            if(!card.isFaceUp){
+                for(Card * otherCard in self.cards){
+                    if(otherCard.isFaceUp && !otherCard.isUnplayable){
+                        int matchScore = [card match:@[otherCard]];
+                        if(matchScore){
+                            self.score += matchScore;
+                            card.unplayable = YES;
+                            otherCard.unplayable = YES;
+                            result = [NSString stringWithFormat:CARD_MATCH,card.contents,otherCard.contents];
+                        }else{
+                            otherCard.faceUp = NO;
+                            self.score -=  MISMATCH_PENALTY;
+                            result = [NSString stringWithFormat:CARD_MISMATCH,card.contents,otherCard.contents];
+                        }
+                        break;
                     }
-                    break;
+                }
+                self.score -= FLIP_COST;
+            }
+            card.faceUp = !card.faceUp;
+        }
+    }else if(card){
+        /* Three cards mode */
+        if(!card.isUnplayable){
+            card.faceUp = !card.isFaceUp;
+            /* Check if we flipped 3 cards already */
+            if(self.flipCount != 0 && self.flipCount % 3 == 0){
+                NSMutableArray * playingCards = [NSMutableArray arrayWithCapacity:3];
+                for(Card * selectedCard in self.cards){
+                    if(selectedCard.isFaceUp && !selectedCard.isUnplayable){
+                        [playingCards addObject:selectedCard];
+                    }
+                }
+                int matchScore = [card match:playingCards];
+                if(matchScore){
+                    self.score += matchScore;
+                    for(Card * selectedCard in playingCards)
+                        selectedCard.unplayable = YES;
+                    result = @"Cards match!";
+                }else{
+                    self.score -=  MISMATCH_PENALTY;
+                    for(Card * selectedCard in playingCards)
+                        selectedCard.faceUp = NO;
+                    result = @"Cards don't match";
                 }
             }
-            self.score -= FLIP_COST;
         }
-        card.faceUp = !card.isFaceUp;
     }
     return result;
 }

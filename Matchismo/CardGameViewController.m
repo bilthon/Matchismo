@@ -17,18 +17,19 @@
 @property (strong, nonatomic) CardMatchingGame * game;
 @property (weak, nonatomic) IBOutlet UILabel *scoreLabel;
 @property (weak, nonatomic) IBOutlet UILabel *resultLabel;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *gameModeSelector;
 @end
 
 @implementation CardGameViewController
 
-- (CardMatchingGame*) game{
+- (CardMatchingGame*) game {
     if(!_game) _game = [[CardMatchingGame alloc] initWithCardCount:self.cardButtons.count
                                                          usingDeck:[[PlayingCardDeck alloc] init]];
     return _game;
 }
 
 - (IBAction)changeGameMode:(UISegmentedControl *)sender {
-    NSInteger * index = [sender selectedSegmentIndex];
+    NSInteger index = [sender selectedSegmentIndex];
     if(index == 0)
         [self.game setGameMode:TWO_CARDS_MODE];
     else
@@ -39,9 +40,10 @@
 - (void) setCardButtons:(NSArray *)cardButtons {
     _cardButtons = cardButtons;
 }
-- (IBAction)dealCard:(id)sender {
+- (IBAction)dealCard:(id) sender {
     [self.game initWithCardCount:[self.cardButtons count] usingDeck:[[PlayingCardDeck alloc] init]];
     [self.game setFlipCount:0];
+    [self changeGameMode:0];
     [self updateUI:@""];
 }
 
@@ -51,17 +53,33 @@
         Card * card = [self.game cardAtIndex:[self.cardButtons indexOfObject:cardButton]];
         [cardButton setTitle:card.contents forState:UIControlStateSelected];
         [cardButton setTitle:card.contents forState:UIControlStateSelected|UIControlStateDisabled];
+        
         cardButton.selected = card.isFaceUp;
         cardButton.enabled = !card.isUnplayable;
+        if(card.isFaceUp) {
+            NSLog(@"button %@ is selected",card.contents);
+            [cardButton setImage:nil forState:UIControlStateNormal];
+        } else {
+            NSLog(@"button %@ is not selected",card.contents);
+            [cardButton setImage:[UIImage imageNamed:@"cardback.jpg"] forState:UIControlStateNormal];
+        }
         cardButton.alpha = card.isUnplayable ? 0.3 : 1.0;
         self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d",self.game.score];
         self.flipsLabel.text = [NSString stringWithFormat:@"Flips: %d",self.game.flipCount];
     }
+    BOOL enableSegment = YES;
+    if (self.game.flipCount > 0) {
+        enableSegment = NO;
+    }else{
+        [self.gameModeSelector setSelectedSegmentIndex:0];
+    }
+    for(int i = 0; i < self.gameModeSelector.numberOfSegments; i++)
+        [self.gameModeSelector setEnabled:enableSegment forSegmentAtIndex:i];
 }
 
 - (IBAction)flipCard:(UIButton *)sender {
-    NSString * result = [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
     [self.game setFlipCount:self.game.flipCount+1];
+    NSString * result = [self.game flipCardAtIndex:[self.cardButtons indexOfObject:sender]];
     [self updateUI:result];
 }
 

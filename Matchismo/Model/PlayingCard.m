@@ -18,9 +18,9 @@
  * |____________|_____________|____________|
  * | 2 out of 2 |     2       |     4      |
  * |------------+-------------+------------|
- * | 2 out of 3 |     1       |     2      |
+ * | 2 out of 3 |     1       |     3      |
  * |------------+-------------+------------|
- * | 3 out of 3 |     4       |     16     |
+ * | 3 out of 3 |     8       |     16     |
  * +------------+-------------+------------+
  */
 - (int) match:(NSArray*)otherCards{
@@ -50,9 +50,9 @@
         if(rankMatch == 3)
             score = 16;
         else if(suitMatch == 3)
-            score = 4;
+            score = 8;
         else if(rankMatch == 2)
-            score = 2;
+            score = 3;
         else if(suitMatch == 2)
             score = 1;
     }

@@ -273,11 +273,23 @@
                                     <action selector="changeGameMode:" destination="2" eventType="valueChanged" id="Moj-mS-DaH"/>
                                 </connections>
                             </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" id="KnN-FZ-sk0">
+                                <rect key="frame" x="142" y="8" width="145" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="2 cards"/>
+                                    <segment title="3 cards"/>
+                                </segments>
+                                <connections>
+                                    <action selector="changeGameMode:" destination="2" eventType="valueChanged" id="WGh-Mo-nIh"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <connections>
                         <outlet property="flipsLabel" destination="iDN-Yo-VGz" id="uNV-IL-cIb"/>
+                        <outlet property="gameModeSelector" destination="KnN-FZ-sk0" id="fSG-3h-dp3"/>
                         <outlet property="resultLabel" destination="dko-O6-otd" id="eNz-aa-tmw"/>
                         <outlet property="scoreLabel" destination="wAV-lV-18M" id="YxE-9K-eZU"/>
                         <outletCollection property="cardButtons" destination="48w-E8-kp4" id="P1s-B5-Ekc"/>
@@ -300,7 +312,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1147" y="25"/>
+            <point key="canvasLocation" x="-1502" y="40"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
