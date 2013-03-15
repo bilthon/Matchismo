@@ -37,6 +37,13 @@
         
 }
 
+- (void) viewDidLoad{
+    NSLog(@"viewDidLoad");
+    [super viewDidLoad];
+    [self.game initWithCardCount:[self.cardButtons count] usingDeck:[[PlayingCardDeck alloc] init]];
+    [self updateUI:@""];
+}
+
 - (void) setCardButtons:(NSArray *)cardButtons {
     _cardButtons = cardButtons;
 }
@@ -57,10 +64,8 @@
         cardButton.selected = card.isFaceUp;
         cardButton.enabled = !card.isUnplayable;
         if(card.isFaceUp) {
-            NSLog(@"button %@ is selected",card.contents);
             [cardButton setImage:nil forState:UIControlStateNormal];
         } else {
-            NSLog(@"button %@ is not selected",card.contents);
             [cardButton setImage:[UIImage imageNamed:@"cardback.jpg"] forState:UIControlStateNormal];
         }
         cardButton.alpha = card.isUnplayable ? 0.3 : 1.0;

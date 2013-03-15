@@ -25,6 +25,8 @@
  */
 - (int) match:(NSArray*)otherCards{
     int score = 0;
+    if(![[otherCards lastObject] isMemberOfClass:[PlayingCard class]])
+        return score;
     /* 2-cards-match mode */
     if([otherCards count] == 1){
         PlayingCard * otherCard = [otherCards lastObject];
